@@ -1,0 +1,4 @@
+apps:
+  - script: ./dist/main.js
+    name: 'main'
+    log_file: './logs/main.log'
