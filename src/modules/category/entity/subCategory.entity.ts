@@ -11,9 +11,7 @@ export class SubCategory extends BaseEntity {
     this.category = category;
   }
 
-  @Column({
-    unique: true,
-  })
+  @Column()
   public name: string;
 
   @ManyToOne(() => Category, {

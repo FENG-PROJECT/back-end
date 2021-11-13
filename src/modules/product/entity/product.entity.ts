@@ -1,27 +1,34 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { BaseEntity } from 'src/modules/database/entity';
 import { ProductStatus } from 'src/utils/constant';
 import { ProductStock } from './productStock.entity';
+import { SubCategory } from 'src/modules/category/entity';
 
 @Entity('products')
 export class Product extends BaseEntity {
   constructor(
+    subCategory: SubCategory,
     name: string,
     price: number,
     arrival: string,
     status: ProductStatus,
   ) {
     super();
+    this.subCategory = subCategory;
     this.name = name;
     this.price = price;
     this.arrival = arrival;
     this.status = status;
   }
 
-  @Column({
-    unique: true,
+  @ManyToOne(() => SubCategory, {
+    eager: true,
   })
+  @JoinColumn({ name: 'sub_category_id' })
+  public subCategory: SubCategory;
+
+  @Column()
   public name: string;
 
   @Column({

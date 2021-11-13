@@ -6,6 +6,7 @@ import { ProductProviders } from './product.providers';
 import { ProductService } from './product.service';
 import { diskStorage } from 'multer';
 import path = require('path');
+import { CategoryProviders } from '../category/category.providers';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import path = require('path');
     }),
   ],
   controllers: [ProductController],
-  providers: [...ProductProviders, ProductService],
+  providers: [...ProductProviders, ...CategoryProviders, ProductService],
   exports: [ProductService],
 })
 export class ProductModule {}

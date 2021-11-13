@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Put,
   Request,
   UploadedFile,
@@ -24,18 +25,36 @@ import { ValidUploadFileType } from 'src/utils/constant';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
-  async getProfile(@Request() req) {
+  async getCategories() {
     let result = null;
 
-    // try {
-    //   result = await this.buyerService.getProfile(req.user);
-    // } catch (error) {
-    //   throw new InternalServerErrorException();
-    // }
+    try {
+      result = await this.categoryService.getCategories();
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
 
-    // if (!result) throw new NotFoundException();
+    if (!result) throw new NotFoundException();
+
+    return result;
+  }
+
+  @Get(':nameCategory')
+  async getSubCategoriesByCategoryName(
+    @Param('nameCategory') nameCategory: string,
+  ) {
+    let result = null;
+
+    try {
+      result = await this.categoryService.getSubCategoriesByCategoryName(
+        nameCategory,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+
+    if (!result) throw new NotFoundException();
 
     return result;
   }

@@ -1,20 +1,22 @@
 version: '3'
 
-networks:
-  akc-net:
-
 services:
-  akc-database:
-    container_name: akc-database
-    image: postgres
-    env_file:
-      - .env
-    volumes:
-      - akc-database-data:/var/lib/postgresql/data/
-    networks:
-      - akc-net
+  test-db:
+    image: mysql:5.5
+    container_name: test-db
     ports:
-      - 5432:5432
+      - '3306:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+      - .:/test-app
+    environment:
+      # Các thông số này thay đổi theo password mysql trên máy bạn nhé.
+      MYSQL_ROOT_PASSWORD: password #
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: user_testdb
+      MYSQL_PASSWORD: password
 
+# Tạo volume để lần sau có build lại cũng nhanh hơn
 volumes:
-  akc-database-data:
+  db_data:
+  web_rubygems:
