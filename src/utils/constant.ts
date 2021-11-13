@@ -1,5 +1,11 @@
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
+enum ProductStatus {
+  SOLD_OUT = 'SOLD_OUT',
+  IN_STOCK = 'IN_STOCK',
+  IS_COMING = 'IS_COMING',
+}
+
 enum ValidUploadFileType {
   'image/jpg',
   'image/jpeg',
@@ -7,7 +13,4 @@ enum ValidUploadFileType {
   'application/json',
 }
 
-export {
-  ZERO_ADDRESS,
-  ValidUploadFileType,
-};
+export { ZERO_ADDRESS, ValidUploadFileType, ProductStatus };
