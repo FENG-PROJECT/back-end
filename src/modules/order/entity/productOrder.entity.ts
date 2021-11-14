@@ -7,11 +7,19 @@ import { Order } from '.';
 
 @Entity('products_orders')
 export class ProductOrder extends BaseEntity {
-  constructor(order: Order, product: Product, amount: number) {
+  constructor(
+    order: Order,
+    product: Product,
+    amount: number,
+    size: string,
+    color: string,
+  ) {
     super();
     this.order = order;
     this.product = product;
     this.amount = amount;
+    this.size = size;
+    this.color = color;
   }
 
   @ManyToOne(() => Order, {
@@ -28,4 +36,10 @@ export class ProductOrder extends BaseEntity {
 
   @Column()
   public amount: number;
+
+  @Column()
+  public size: string;
+
+  @Column()
+  public color: string;
 }

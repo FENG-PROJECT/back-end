@@ -11,5 +11,7 @@ export class CreateOrderDto {
   readonly address: string;
 
   @IsArray()
-  readonly productOrders: [{ productId: number; amount: number }];
+  readonly productOrders: [
+    { productId: number; amount: number; size: string; color: string },
+  ];
 }

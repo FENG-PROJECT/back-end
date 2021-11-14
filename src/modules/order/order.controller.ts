@@ -26,6 +26,20 @@ import { CreateOrderDto } from './dto';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  @Get()
+  async getOrders() {
+    let result = null;
+
+    try {
+      result = await this.orderService.getOrders();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+
+    if (!result) throw new BadRequestException();
+
+    return result;
+  }
   @Post()
   async getProfile(@Body() createOrder: CreateOrderDto) {
     let result = null;
