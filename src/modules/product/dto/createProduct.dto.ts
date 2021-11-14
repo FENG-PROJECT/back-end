@@ -1,29 +1,32 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { ProductStatus } from 'src/utils/constant';
 
 export class CreateProductDto {
-  @IsNumber()
-  readonly subCategoryId: number;
+  @IsString()
+  readonly subCategoryId: string;
 
   @IsString()
   readonly name: string;
 
-  @IsNumber()
-  readonly price: number;
+  @IsString()
+  readonly price: string;
 
   @IsString()
   readonly arrival: string;
 
   @IsString()
+  readonly color: string;
+
+  @IsString()
+  readonly description: string;
+
+  @IsOptional()
+  @IsString()
+  readonly images: string;
+
+  @IsString()
   readonly status: ProductStatus;
 
-  productStocks: productStock[];
-}
-
-class productStock {
   @IsString()
-  readonly size: string;
-
-  @IsNumber()
-  readonly amount: number;
+  productStocks: string; //productStock[];
 }

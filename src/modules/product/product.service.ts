@@ -9,6 +9,7 @@ import { Category, SubCategory } from '../category/entity';
 import { CreateProductDto } from './dto';
 import { Product } from './entity';
 import { ProductStock } from './entity/productStock.entity';
+import * as fs from 'fs';
 
 @Injectable()
 export class ProductService {
@@ -30,10 +31,6 @@ export class ProductService {
       );
       if (!subCategory) return false;
 
-      // const products = await this.productRepository.find({
-      //   where: { subCategory: { id: subCategoryId } },
-      // });
-
       const products = await this.productRepository
         .createQueryBuilder('product')
         .leftJoinAndSelect('product.subCategory', 'subCategory')
@@ -48,6 +45,9 @@ export class ProductService {
         name: p.name,
         arrival: p.arrival,
         status: p.status,
+        color: p.color,
+        description: p.description,
+        images: p.images,
         productStocks:
           p.productStocks &&
           p.productStocks.map((e) => ({ size: e.size, amount: e.amount })),
@@ -58,17 +58,34 @@ export class ProductService {
     }
   }
 
-  async createProduct(createProductdto: CreateProductDto) {
+  async createProduct(createProductdto: CreateProductDto, fileNames: string[]) {
     try {
-      const { name, price, arrival, status } = createProductdto;
+      const {
+        name,
+        price,
+        arrival,
+        color,
+        description,
+        productStocks,
+        status,
+      } = createProductdto;
       const subCategory = await this.subCategoryRepository.findOne(
         createProductdto.subCategoryId,
       );
       if (!subCategory) return false;
 
-      const product = new Product(subCategory, name, price, arrival, status);
+      const product = new Product(
+        subCategory,
+        name,
+        Number(price),
+        arrival,
+        JSON.parse(color),
+        description,
+        status,
+      );
+      product.images = fileNames.map((e) => `${process.env.URL}/products/${e}`);
       product.productStocks = [];
-      for (const _stock of createProductdto.productStocks) {
+      for (const _stock of JSON.parse(productStocks)) {
         const { size, amount } = _stock;
         const productStock = new ProductStock(product, size, amount);
         await this.productStockRepository.save(productStock);
@@ -84,6 +101,9 @@ export class ProductService {
           price: product.price,
           arrival: product.arrival,
           status: product.status,
+          color: product.color,
+          description: product.description,
+          images: product.images,
         },
       };
     } catch (error) {
@@ -91,22 +111,55 @@ export class ProductService {
     }
   }
 
-  async updateProduct(productId, createProductdto: CreateProductDto) {
+  async updateProduct(
+    productId: number,
+    createProductdto: CreateProductDto,
+    fileNames: string[],
+  ) {
     try {
       const product = await this.productRepository.findOne(productId);
       if (!product) return false;
 
-      const { name, price, arrival, status } = createProductdto;
+      const {
+        name,
+        price,
+        arrival,
+        color,
+        description,
+        images,
+        status,
+        productStocks,
+      } = createProductdto;
       const subCategory = await this.subCategoryRepository.findOne(
         createProductdto.subCategoryId,
       );
+
       if (!subCategory) return false;
       product.name = name;
-      product.price = price;
+      product.price = Number(price);
       product.arrival = arrival;
       product.status = status;
+      product.color = JSON.parse(color);
+      product.description = description;
+
+      const removeImages = product.images.filter(
+        (x) => !(images || []).includes(x),
+      );
+
+      for (const _image of removeImages) {
+        if (fs.existsSync(_image.replace(`${process.env.URL}`, 'uploads')))
+          fs.unlinkSync(_image.replace(`${process.env.URL}`, 'uploads'));
+      }
+
+      product.images = (images && JSON.parse(images)) || [];
+
+      if (fileNames)
+        product.images = product.images.concat(
+          fileNames.map((e) => `${process.env.URL}/products/${e}`),
+        );
       product.productStocks = [];
-      for (const _stock of createProductdto.productStocks) {
+
+      for (const _stock of JSON.parse(productStocks)) {
         const { size, amount } = _stock;
         const productStock = new ProductStock(product, size, amount);
         await this.productStockRepository.save(productStock);

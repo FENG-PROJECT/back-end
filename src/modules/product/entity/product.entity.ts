@@ -12,6 +12,8 @@ export class Product extends BaseEntity {
     name: string,
     price: number,
     arrival: string,
+    color: string[],
+    description: string,
     status: ProductStatus,
   ) {
     super();
@@ -19,6 +21,8 @@ export class Product extends BaseEntity {
     this.name = name;
     this.price = price;
     this.arrival = arrival;
+    this.color = color;
+    this.description = description;
     this.status = status;
   }
 
@@ -40,6 +44,23 @@ export class Product extends BaseEntity {
     nullable: true,
   })
   public arrival: string;
+
+  @Column({
+    type: 'json',
+  })
+  color: string[];
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  description: string;
+
+  @Column({
+    type: 'json',
+    nullable: true,
+  })
+  images: string[];
 
   @Column()
   public status: ProductStatus;

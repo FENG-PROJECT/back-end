@@ -10,7 +10,10 @@ import {
 } from '@nestjs/common';
 import { UpdateBuyerDto } from '../buyer/dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from '@nestjs/platform-express';
 
 import {
   InternalServerErrorException,
@@ -40,7 +43,7 @@ export class BuyerController {
     return result;
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   @Put('profile')
   async updateProfile(

@@ -14,7 +14,7 @@ import { CategoryProviders } from '../category/category.providers';
     MulterModule.registerAsync({
       useFactory: async () => ({
         storage: diskStorage({
-          destination: './uploads/avatar',
+          destination: './uploads/products',
           filename: (req, file, cb) => {
             const filename: string =
               path.parse(file.originalname).name.replace(/\s/g, '') +

@@ -8,17 +8,21 @@ import {
   Query,
   Request,
   UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UpdateBuyerDto } from '../buyer/dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from '@nestjs/platform-express';
 
 import {
+  BadRequestException,
   InternalServerErrorException,
   NotFoundException,
-  BadRequestException,
 } from 'src/exceptions';
 import { ProductService } from './product.service';
 import { ValidUploadFileType } from 'src/utils/constant';
@@ -28,13 +32,24 @@ import { CreateProductDto } from './dto';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 5 }]))
   @Post()
-  async createProduct(@Body() createProductDto: CreateProductDto) {
+  async createProduct(
+    @Body() createProductDto: CreateProductDto,
+    @UploadedFiles() uploads: Array<Express.Multer.File>,
+  ) {
+    for (const file of uploads['files']) {
+      if (file && !(file?.mimetype in ValidUploadFileType))
+        throw new BadRequestException();
+    }
+
     let result = null;
 
     try {
-      result = await this.productService.createProduct(createProductDto);
+      result = await this.productService.createProduct(
+        createProductDto,
+        uploads['files'].map((e) => e.filename),
+      );
     } catch (error) {}
 
     if (!result) throw new NotFoundException();
@@ -43,16 +58,24 @@ export class ProductController {
   }
 
   @Put(':productId')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 7 }]))
   async updateProduct(
     @Param('productId') productId: string,
     @Body() createProductDto: CreateProductDto,
+    @UploadedFiles() uploads: Array<Express.Multer.File>,
   ) {
+    for (const file of uploads['files']) {
+      if (file && !(file?.mimetype in ValidUploadFileType))
+        throw new BadRequestException();
+    }
+
     let result = null;
 
     try {
       result = await this.productService.updateProduct(
         +productId,
         createProductDto,
+        uploads['files'].map((e) => e.filename),
       );
     } catch (error) {}
 
