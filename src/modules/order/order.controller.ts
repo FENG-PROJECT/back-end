@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Post,
   Put,
   Request,
   UploadedFile,
@@ -19,18 +20,18 @@ import {
 } from 'src/exceptions';
 import { OrderService } from './order.service';
 import { ValidUploadFileType } from 'src/utils/constant';
+import { CreateOrderDto } from './dto';
 
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getProfile(@Request() req) {
+  @Post()
+  async getProfile(@Body() createOrder: CreateOrderDto) {
     let result = null;
 
     try {
-      // result = await this.orderService.getProfile(req.user);
+      result = await this.orderService.createOrder(createOrder);
     } catch (error) {
       throw new InternalServerErrorException();
     }

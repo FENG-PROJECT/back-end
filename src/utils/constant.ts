@@ -6,6 +6,12 @@ enum ProductStatus {
   IS_COMING = 'IS_COMING',
 }
 
+enum OrderStatus {
+  PENDING = 'PENDING',
+  PROCESSING = 'PROCESSING',
+  SUCCESSFUL = 'SUCCESSFUL',
+}
+
 enum ValidUploadFileType {
   'image/jpg',
   'image/jpeg',
@@ -13,4 +19,4 @@ enum ValidUploadFileType {
   'application/json',
 }
 
-export { ZERO_ADDRESS, ValidUploadFileType, ProductStatus };
+export { ZERO_ADDRESS, ValidUploadFileType, ProductStatus, OrderStatus };

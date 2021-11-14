@@ -1,55 +1,35 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 import { BaseEntity } from 'src/modules/database/entity';
+import { Product } from 'src/modules/product/entity';
+import { OrderStatus } from 'src/utils/constant';
+import { ProductOrder } from './productOrder.entity';
 
 @Entity('orders')
 export class Order extends BaseEntity {
-  constructor(email: string, password: string, username: string) {
+  constructor(name: string, phone: string, address: string) {
     super();
-    this.email = email;
-    this.password = password;
-    this.username = username;
+    this.name = name;
+    this.phone = phone;
+    this.address = address;
+    this.status = OrderStatus.PENDING;
   }
 
-  @Column({
-    unique: true,
-  })
-  public email: string;
-
-  @Column({
-    nullable: true,
-    name: 'email_recovery',
-  })
-  public emailRecovery: string;
-
-  @Column({
-    unique: true,
-    nullable: true,
-  })
-  public username: string;
+  @Column()
+  public name: string;
 
   @Column()
-  public password: string;
+  public phone: string;
 
-  @Column({
-    nullable: true,
-  })
+  @Column()
   public address: string;
 
-  @Column({
-    nullable: true,
-  })
-  public avatar: string;
+  @OneToMany(() => ProductOrder, (productOrder) => productOrder.order)
+  public productOrders: ProductOrder[];
 
-  @Column({
-    type: 'text',
-    name: 'company_description',
-    nullable: true,
-  })
-  public companyDescription: string;
+  @Column()
+  public totalPrice: number;
 
-  @Column({
-    default: false,
-  })
-  public isActive: boolean;
+  @Column()
+  public status: string;
 }

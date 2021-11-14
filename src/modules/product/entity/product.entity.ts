@@ -4,6 +4,8 @@ import { BaseEntity } from 'src/modules/database/entity';
 import { ProductStatus } from 'src/utils/constant';
 import { ProductStock } from './productStock.entity';
 import { SubCategory } from 'src/modules/category/entity';
+import { Order } from 'src/modules/order/entity';
+import { ProductOrder } from 'src/modules/order/entity/productOrder.entity';
 
 @Entity('products')
 export class Product extends BaseEntity {
@@ -67,4 +69,7 @@ export class Product extends BaseEntity {
 
   @OneToMany(() => ProductStock, (productStock) => productStock.product)
   public productStocks: ProductStock[];
+
+  @OneToMany(() => ProductOrder, (productOrder) => productOrder.product)
+  public productOrders: ProductOrder[];
 }

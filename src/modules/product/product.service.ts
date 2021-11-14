@@ -43,6 +43,7 @@ export class ProductService {
       return products.map((p) => ({
         id: p.id,
         name: p.name,
+        price: p.price,
         arrival: p.arrival,
         status: p.status,
         color: p.color,
