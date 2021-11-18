@@ -9,7 +9,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { UpdateBuyerDto } from '../buyer/dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -26,6 +25,7 @@ import { CreateOrderDto } from './dto';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getOrders() {
     let result = null;
@@ -40,6 +40,7 @@ export class OrderController {
 
     return result;
   }
+
   @Post()
   async getProfile(@Body() createOrder: CreateOrderDto) {
     let result = null;

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { DatabaseModule } from '../database/database.module';
-import { BuyerController } from './buyer.controller';
-import { BuyerProviders } from './buyer.providers';
-import { BuyerService } from './buyer.service';
+import { AdminController } from './admin.controller';
+import { AdminProviders } from './admin.providers';
+import { AdminService } from './admin.service';
 import { diskStorage } from 'multer';
 import path = require('path');
 
@@ -25,8 +25,8 @@ import path = require('path');
       }),
     }),
   ],
-  controllers: [BuyerController],
-  providers: [...BuyerProviders, BuyerService],
-  exports: [BuyerService],
+  controllers: [AdminController],
+  providers: [...AdminProviders, AdminService],
+  exports: [AdminService],
 })
-export class BuyerModule {}
+export class AdminModule {}

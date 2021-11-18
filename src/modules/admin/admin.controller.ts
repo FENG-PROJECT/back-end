@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Get,
-  Param,
+  Post,
   Put,
   Request,
   UploadedFile,
@@ -17,20 +17,21 @@ import {
   NotFoundException,
   BadRequestException,
 } from 'src/exceptions';
-import { CategoryService } from './category.service';
+import { AdminService } from './admin.service';
 import { ValidUploadFileType } from 'src/utils/constant';
+import { CreateAdminDto } from './dto';
 
-@UseGuards(JwtAuthGuard)
-@Controller('categories')
-export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+@Controller('admins')
+export class AdminController {
+  constructor(private readonly adminService: AdminService) {}
 
-  @Get()
-  async getCategories() {
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@Request() req) {
     let result = null;
 
     try {
-      result = await this.categoryService.getCategories();
+      result = await this.adminService.getProfile(req.user);
     } catch (error) {
       throw new InternalServerErrorException();
     }
@@ -40,16 +41,12 @@ export class CategoryController {
     return result;
   }
 
-  @Get(':nameCategory')
-  async getSubCategoriesByCategoryName(
-    @Param('nameCategory') nameCategory: string,
-  ) {
+  @Post()
+  async createAdmin(@Body() createAdminDto: CreateAdminDto) {
     let result = null;
 
     try {
-      result = await this.categoryService.getSubCategoriesByCategoryName(
-        nameCategory,
-      );
+      result = await this.adminService.createAdmin(createAdminDto);
     } catch (error) {
       throw new InternalServerErrorException();
     }

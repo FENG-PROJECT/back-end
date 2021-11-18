@@ -24,35 +24,57 @@ export class ProductService {
     private subCategoryRepository: Repository<SubCategory>,
   ) {}
 
-  async getProductBySubCategoryId(subCategoryId: number) {
+  async getProductBySubCategoryId(
+    subCategoryId: number,
+    limit: number,
+    offset: number,
+  ) {
     try {
       const subCategory = await this.subCategoryRepository.findOne(
         subCategoryId,
       );
       if (!subCategory) return false;
 
-      const products = await this.productRepository
+      let countQuery = this.productRepository
         .createQueryBuilder('product')
         .leftJoinAndSelect('product.subCategory', 'subCategory')
         .leftJoinAndSelect('product.productStocks', 'productStocks')
         .where('subCategory.id = :subCategoryId', {
           subCategoryId: subCategoryId,
-        })
-        .orderBy('product.updatedAt', 'DESC')
-        .getMany();
-      return products.map((p) => ({
-        id: p.id,
-        name: p.name,
-        price: p.price,
-        arrival: p.arrival,
-        status: p.status,
-        color: p.color,
-        description: p.description,
-        images: p.images,
-        productStocks:
-          p.productStocks &&
-          p.productStocks.map((e) => ({ size: e.size, amount: e.amount })),
-      }));
+        });
+
+      const query = this.productRepository
+        .createQueryBuilder('product')
+        .leftJoinAndSelect('product.subCategory', 'subCategory')
+        .leftJoinAndSelect('product.productStocks', 'productStocks')
+        .where('subCategory.id = :subCategoryId', {
+          subCategoryId: subCategoryId,
+        });
+
+      const [countProduct, products] = await Promise.all([
+        countQuery.getCount(),
+        query
+          .orderBy('product.updatedAt', 'DESC')
+          .take(limit || 10)
+          .skip(offset || 0)
+          .getMany(),
+      ]);
+      return {
+        count: countProduct,
+        products: products.map((p) => ({
+          id: p.id,
+          name: p.name,
+          price: p.price,
+          arrival: p.arrival,
+          status: p.status,
+          color: p.color,
+          description: p.description,
+          images: p.images,
+          productStocks:
+            p.productStocks &&
+            p.productStocks.map((e) => ({ size: e.size, amount: e.amount })),
+        })),
+      };
     } catch (error) {
       console.log(error);
       throw error;

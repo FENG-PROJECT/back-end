@@ -1,5 +1,5 @@
-import { Admin } from '../admin/entity';
 import { Connection } from 'typeorm';
+import { Admin } from './entity';
 
 export const AdminProviders = [
   {

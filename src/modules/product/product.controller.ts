@@ -12,7 +12,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { UpdateBuyerDto } from '../buyer/dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import {
   FileFieldsInterceptor,
@@ -28,6 +27,7 @@ import { ProductService } from './product.service';
 import { ValidUploadFileType } from 'src/utils/constant';
 import { CreateProductDto } from './dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
@@ -87,12 +87,16 @@ export class ProductController {
   @Get()
   async getProductBySubCategoryId(
     @Query('subCategoryId') subCategoryId: string,
+    @Query('limit') limit: string,
+    @Query('offset') offset: string,
   ) {
     let result = null;
 
     try {
       result = await this.productService.getProductBySubCategoryId(
         +subCategoryId,
+        +limit || 10,
+        +offset || 0,
       );
     } catch (error) {
       throw new InternalServerErrorException();

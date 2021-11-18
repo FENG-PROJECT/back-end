@@ -2,8 +2,8 @@ import { Column, Entity } from 'typeorm';
 
 import { BaseEntity } from 'src/modules/database/entity';
 
-@Entity('buyers')
-export class Buyer extends BaseEntity {
+@Entity('admins')
+export class Admin extends BaseEntity {
   constructor(email: string, password: string, username: string) {
     super();
     this.email = email;
@@ -17,12 +17,6 @@ export class Buyer extends BaseEntity {
   public email: string;
 
   @Column({
-    nullable: true,
-    name: 'email_recovery',
-  })
-  public emailRecovery: string;
-
-  @Column({
     unique: true,
     nullable: true,
   })
@@ -34,19 +28,7 @@ export class Buyer extends BaseEntity {
   @Column({
     nullable: true,
   })
-  public address: string;
-
-  @Column({
-    nullable: true,
-  })
   public avatar: string;
-
-  @Column({
-    type: 'text',
-    name: 'company_description',
-    nullable: true,
-  })
-  public companyDescription: string;
 
   @Column({
     default: false,

@@ -10,7 +10,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { UpdateBuyerDto } from '../buyer/dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -23,6 +22,7 @@ import { CollectionService } from './collection.service';
 import { ValidUploadFileType } from 'src/utils/constant';
 import { CreateCollectionDto } from './dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('collections')
 export class CollectionController {
   constructor(private readonly collectionService: CollectionService) {}
