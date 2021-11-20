@@ -27,11 +27,11 @@ import { ProductService } from './product.service';
 import { ValidUploadFileType } from 'src/utils/constant';
 import { CreateProductDto } from './dto';
 
-@UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 5 }]))
   @Post()
   async createProduct(
@@ -57,6 +57,7 @@ export class ProductController {
     return result;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':productId')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 7 }]))
   async updateProduct(
