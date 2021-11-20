@@ -79,7 +79,7 @@ export class CategoryController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('/subCategory/:subCategoryId')
+  @Put('/subCategory/:subCategoryId')
   async updateSubCategory(
     @Param('subCategoryId') subCategoryId: string,
     @Body() createSubCategoryDto: CreateSubCategoryDto,

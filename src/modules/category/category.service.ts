@@ -59,6 +59,7 @@ export class CategoryService {
       );
 
       return {
+        id: subCategories.id,
         name: subCategories.name,
         category: category.name,
       };
@@ -85,6 +86,7 @@ export class CategoryService {
       await this.subCategoryRepository.save(subCategory);
 
       return {
+        id: subCategory.id,
         name: subCategory.name,
         category: category.name,
       };
