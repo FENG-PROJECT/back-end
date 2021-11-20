@@ -24,34 +24,29 @@ export class ProductService {
     private subCategoryRepository: Repository<SubCategory>,
   ) {}
 
-  async getProductBySubCategoryId(
-    subCategoryId: number,
-    limit: number,
-    offset: number,
-  ) {
+  async getProducts(subCategoryId: number, limit: number, offset: number) {
     try {
-      const subCategory = await this.subCategoryRepository.findOne(
-        subCategoryId,
-      );
-      if (!subCategory) return false;
-
       let countQuery = this.productRepository
         .createQueryBuilder('product')
         .leftJoinAndSelect('product.subCategory', 'subCategory')
         .leftJoinAndSelect('product.productStocks', 'productStocks')
-        .where('subCategory.id = :subCategoryId', {
-          subCategoryId: subCategoryId,
-        })
-        .andWhere('product.deleted = FALSE');
+        .where('product.deleted = FALSE');
 
-      const query = this.productRepository
+      let query = this.productRepository
         .createQueryBuilder('product')
         .leftJoinAndSelect('product.subCategory', 'subCategory')
         .leftJoinAndSelect('product.productStocks', 'productStocks')
-        .where('subCategory.id = :subCategoryId', {
+        .where('product.deleted = FALSE');
+
+      if (subCategoryId) {
+        query = query.andWhere('subCategory.id = :subCategoryId', {
           subCategoryId: subCategoryId,
-        })
-        .andWhere('product.deleted = FALSE');
+        });
+
+        countQuery = countQuery.andWhere('subCategory.id = :subCategoryId', {
+          subCategoryId: subCategoryId,
+        });
+      }
 
       const [countProduct, products] = await Promise.all([
         countQuery.getCount(),
