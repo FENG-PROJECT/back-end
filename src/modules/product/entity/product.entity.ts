@@ -26,6 +26,7 @@ export class Product extends BaseEntity {
     this.color = color;
     this.description = description;
     this.status = status;
+    this.deleted = false;
   }
 
   @ManyToOne(() => SubCategory, {
@@ -72,4 +73,9 @@ export class Product extends BaseEntity {
 
   @OneToMany(() => ProductOrder, (productOrder) => productOrder.product)
   public productOrders: ProductOrder[];
+
+  @Column({
+    default: false,
+  })
+  public deleted: boolean;
 }

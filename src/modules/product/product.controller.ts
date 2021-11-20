@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -99,6 +100,21 @@ export class ProductController {
         +limit || 10,
         +offset || 0,
       );
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+
+    if (!result) throw new NotFoundException();
+
+    return result;
+  }
+
+  @Delete(':productId')
+  async deleteProduct(@Param('productId') productId: string) {
+    let result = null;
+
+    try {
+      result = await this.productService.deleteProduct(+productId);
     } catch (error) {
       throw new InternalServerErrorException();
     }

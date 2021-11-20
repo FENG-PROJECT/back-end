@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Post,
   Put,
   Request,
   UploadedFile,
@@ -19,8 +20,8 @@ import {
 } from 'src/exceptions';
 import { CategoryService } from './category.service';
 import { ValidUploadFileType } from 'src/utils/constant';
+import { CreateSubCategoryDto } from './dto';
 
-@UseGuards(JwtAuthGuard)
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -49,6 +50,46 @@ export class CategoryController {
     try {
       result = await this.categoryService.getSubCategoriesByCategoryName(
         nameCategory,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+
+    if (!result) throw new NotFoundException();
+
+    return result;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/subCategory')
+  async createSubCategory(@Body() createSubCategoryDto: CreateSubCategoryDto) {
+    let result = null;
+
+    try {
+      result = await this.categoryService.createSubCategory(
+        createSubCategoryDto,
+      );
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+
+    if (!result) throw new NotFoundException();
+
+    return result;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/subCategory/:subCategoryId')
+  async updateSubCategory(
+    @Param('subCategoryId') subCategoryId: string,
+    @Body() createSubCategoryDto: CreateSubCategoryDto,
+  ) {
+    let result = null;
+
+    try {
+      result = await this.categoryService.updateSubCategory(
+        +subCategoryId,
+        createSubCategoryDto,
       );
     } catch (error) {
       throw new InternalServerErrorException();

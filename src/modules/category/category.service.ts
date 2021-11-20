@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Not, Repository } from 'typeorm';
-import { UpdateBuyerDto } from './dto';
+import { CreateSubCategoryDto } from './dto';
 import { Category, SubCategory } from './entity';
 
 @Injectable()
@@ -42,6 +42,52 @@ export class CategoryService {
         id: c.id,
         name: c.name,
       }));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createSubCategory(createSubCategoryDto: CreateSubCategoryDto) {
+    try {
+      const category = await this.categoryRepository.findOne({
+        where: { name: createSubCategoryDto.categoryName },
+      });
+      if (!category) return false;
+
+      const subCategories = await this.subCategoryRepository.save(
+        new SubCategory(createSubCategoryDto.name, category),
+      );
+
+      return {
+        name: subCategories.name,
+        category: category.name,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateSubCategory(
+    subCategoryId: number,
+    createSubCategoryDto: CreateSubCategoryDto,
+  ) {
+    try {
+      const [subCategory, category] = await Promise.all([
+        this.subCategoryRepository.findOne(subCategoryId),
+        this.categoryRepository.findOne({
+          where: { name: createSubCategoryDto.categoryName },
+        }),
+      ]);
+      if (!subCategory || !category) return false;
+
+      subCategory.name = createSubCategoryDto.name;
+      subCategory.category = category;
+      await this.subCategoryRepository.save(subCategory);
+
+      return {
+        name: subCategory.name,
+        category: category.name,
+      };
     } catch (error) {
       throw error;
     }

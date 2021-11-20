@@ -1,1 +1,1 @@
-export * from './createBuyer.dto';
+export * from './createSubCategory.dto';

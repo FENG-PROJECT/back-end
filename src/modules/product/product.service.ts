@@ -41,7 +41,8 @@ export class ProductService {
         .leftJoinAndSelect('product.productStocks', 'productStocks')
         .where('subCategory.id = :subCategoryId', {
           subCategoryId: subCategoryId,
-        });
+        })
+        .andWhere('product.deleted = FALSE');
 
       const query = this.productRepository
         .createQueryBuilder('product')
@@ -49,7 +50,8 @@ export class ProductService {
         .leftJoinAndSelect('product.productStocks', 'productStocks')
         .where('subCategory.id = :subCategoryId', {
           subCategoryId: subCategoryId,
-        });
+        })
+        .andWhere('product.deleted = FALSE');
 
       const [countProduct, products] = await Promise.all([
         countQuery.getCount(),
@@ -199,6 +201,22 @@ export class ProductService {
           arrival: product.arrival,
           status: product.status,
         },
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteProduct(productId: number) {
+    try {
+      const product = await this.productRepository.findOne(productId);
+      if (!product || product.deleted) return false;
+
+      product.deleted = true;
+
+      await this.productRepository.save(product);
+      return {
+        message: 'success',
       };
     } catch (error) {
       throw error;
