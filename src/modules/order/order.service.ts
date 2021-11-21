@@ -1,7 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { OrderStatus } from 'src/utils/constant';
 import { In, Not, Repository } from 'typeorm';
 import { Product } from '../product/entity';
 import { CreateOrderDto } from './dto';
+import { UpdateStatusOrderDto } from './dto/updateStatusOrder.dto';
 import { Order } from './entity';
 import { ProductOrder } from './entity/productOrder.entity';
 
@@ -72,14 +74,19 @@ export class OrderService {
     }
   }
 
-  async getOrders() {
+  async getOrders(orderStatus: OrderStatus) {
     try {
-      const orders = await this.orderRepository
+      let query = this.orderRepository
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.productOrders', 'productOrders')
         .leftJoinAndSelect('productOrders.product', 'product')
-        .orderBy('order.updatedAt', 'DESC')
-        .getMany();
+        .where('TRUE');
+      if (orderStatus) {
+        query = query.andWhere('order.status = :orderStatus', {
+          orderStatus: orderStatus,
+        });
+      }
+      const orders = await query.orderBy('order.updatedAt', 'DESC').getMany();
       return orders.map((o) => ({
         id: o.id,
         name: o.name,
@@ -98,6 +105,24 @@ export class OrderService {
       }));
     } catch (error) {
       console.log(error);
+      throw error;
+    }
+  }
+
+  async updateOrder(orderId: number, updateStatusOrder: UpdateStatusOrderDto) {
+    try {
+      const order = await this.orderRepository.findOne(orderId);
+      if (!order) return false;
+
+      order.status = updateStatusOrder.status;
+      await this.orderRepository.save(order);
+
+      return {
+        message: 'success',
+        statusOrder: updateStatusOrder.status,
+      };
+    } catch (error) {
+      this.logger.error(error);
       throw error;
     }
   }

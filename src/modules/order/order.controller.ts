@@ -2,8 +2,10 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
+  Query,
   Request,
   UploadedFile,
   UseGuards,
@@ -18,8 +20,9 @@ import {
   BadRequestException,
 } from 'src/exceptions';
 import { OrderService } from './order.service';
-import { ValidUploadFileType } from 'src/utils/constant';
+import { OrderStatus, ValidUploadFileType } from 'src/utils/constant';
 import { CreateOrderDto } from './dto';
+import { UpdateStatusOrderDto } from './dto/updateStatusOrder.dto';
 
 @Controller('orders')
 export class OrderController {
@@ -27,11 +30,11 @@ export class OrderController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getOrders() {
+  async getOrders(@Query('orderStatus') orderStatus: OrderStatus) {
     let result = null;
 
     try {
-      result = await this.orderService.getOrders();
+      result = await this.orderService.getOrders(orderStatus);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
@@ -42,11 +45,29 @@ export class OrderController {
   }
 
   @Post()
-  async getProfile(@Body() createOrder: CreateOrderDto) {
+  async createOrder(@Body() createOrder: CreateOrderDto) {
     let result = null;
 
     try {
       result = await this.orderService.createOrder(createOrder);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+
+    if (!result) throw new NotFoundException();
+
+    return result;
+  }
+
+  @Put(':orderId')
+  async updateOrder(
+    @Param('orderId') orderId: string,
+    @Body() updateStatusOrder: UpdateStatusOrderDto,
+  ) {
+    let result = null;
+
+    try {
+      result = await this.orderService.updateOrder(+orderId, updateStatusOrder);
     } catch (error) {
       throw new InternalServerErrorException();
     }
