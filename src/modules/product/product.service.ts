@@ -24,7 +24,12 @@ export class ProductService {
     private subCategoryRepository: Repository<SubCategory>,
   ) {}
 
-  async getProducts(subCategoryId: number, limit: number, offset: number) {
+  async getProducts(
+    subCategoryId: number,
+    search: string,
+    limit: number,
+    offset: number,
+  ) {
     try {
       let countQuery = this.productRepository
         .createQueryBuilder('product')
@@ -48,6 +53,19 @@ export class ProductService {
         countQuery = countQuery.andWhere('subCategory.id = :subCategoryId', {
           subCategoryId: subCategoryId,
         });
+      }
+
+      if (search) {
+        query = query.andWhere('LOWER(product.name) LIKE LOWER(:search)', {
+          search: `%${search}%`,
+        });
+
+        countQuery = countQuery.andWhere(
+          'LOWER(product.name) LIKE LOWER(:search)',
+          {
+            search: `%${search}%`,
+          },
+        );
       }
 
       const [countProduct, products] = await Promise.all([
