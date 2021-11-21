@@ -109,6 +109,21 @@ export class ProductController {
     return result;
   }
 
+  @Get(':productId')
+  async getProductDetail(@Param('productId') productId: string) {
+    let result = null;
+
+    try {
+      result = await this.productService.getProductDetail(+productId);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+
+    if (!result) throw new NotFoundException();
+
+    return result;
+  }
+
   @Delete(':productId')
   async deleteProduct(@Param('productId') productId: string) {
     let result = null;

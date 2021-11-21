@@ -29,12 +29,14 @@ export class ProductService {
       let countQuery = this.productRepository
         .createQueryBuilder('product')
         .leftJoinAndSelect('product.subCategory', 'subCategory')
+        .leftJoinAndSelect('subCategory.category', 'category')
         .leftJoinAndSelect('product.productStocks', 'productStocks')
         .where('product.deleted = FALSE');
 
       let query = this.productRepository
         .createQueryBuilder('product')
         .leftJoinAndSelect('product.subCategory', 'subCategory')
+        .leftJoinAndSelect('subCategory.category', 'category')
         .leftJoinAndSelect('product.productStocks', 'productStocks')
         .where('product.deleted = FALSE');
 
@@ -67,10 +69,52 @@ export class ProductService {
           color: p.color,
           description: p.description,
           images: p.images,
+          subCategory: {
+            id: p.subCategory?.id,
+            name: p.subCategory?.name,
+          },
+          category: {
+            id: p.subCategory.category?.id,
+            name: p.subCategory.category?.name,
+          },
           productStocks:
             p.productStocks &&
             p.productStocks.map((e) => ({ size: e.size, amount: e.amount })),
         })),
+      };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  async getProductDetail(productId: number) {
+    try {
+      const product = await this.productRepository.findOne(productId);
+      if (!product) return false;
+
+      return {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        arrival: product.arrival,
+        status: product.status,
+        color: product.color,
+        description: product.description,
+        images: product.images,
+        subCategory: {
+          id: product.subCategory.id,
+          name: product.subCategory.name,
+        },
+        category: {
+          id: product.subCategory.category.id,
+          name: product.subCategory.category.name,
+        },
+        productStocks:
+          product.productStocks &&
+          product.productStocks.map((e) => ({
+            size: e.size,
+            amount: e.amount,
+          })),
       };
     } catch (error) {
       console.log(error);
