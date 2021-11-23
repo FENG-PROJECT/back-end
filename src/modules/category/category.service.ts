@@ -41,6 +41,7 @@ export class CategoryService {
       return subCategories.map((c) => ({
         id: c.id,
         name: c.name,
+        url: c.url,
       }));
     } catch (error) {
       throw error;
