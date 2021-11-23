@@ -5,14 +5,18 @@ import { Category } from './';
 
 @Entity('sub_categories')
 export class SubCategory extends BaseEntity {
-  constructor(name: string, category: Category) {
+  constructor(name: string, url: string, category: Category) {
     super();
     this.name = name;
+    this.url = url;
     this.category = category;
   }
 
   @Column()
   public name: string;
+
+  @Column()
+  public url: string;
 
   @ManyToOne(() => Category, {
     eager: true,

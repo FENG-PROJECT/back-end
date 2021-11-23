@@ -6,4 +6,7 @@ export class CreateSubCategoryDto {
 
   @IsString()
   readonly name: string;
+
+  @IsString()
+  readonly url: string;
 }

@@ -25,7 +25,8 @@ export class ProductService {
   ) {}
 
   async getProducts(
-    subCategoryId: number,
+    category: string,
+    subCategoryUrl: string,
     search: string,
     limit: number,
     offset: number,
@@ -45,13 +46,23 @@ export class ProductService {
         .leftJoinAndSelect('product.productStocks', 'productStocks')
         .where('product.deleted = FALSE');
 
-      if (subCategoryId) {
-        query = query.andWhere('subCategory.id = :subCategoryId', {
-          subCategoryId: subCategoryId,
+      if (category) {
+        query = query.andWhere('category.name = :category', {
+          category: category,
         });
 
-        countQuery = countQuery.andWhere('subCategory.id = :subCategoryId', {
-          subCategoryId: subCategoryId,
+        countQuery = countQuery.andWhere('category.name = :category', {
+          category: category,
+        });
+      }
+
+      if (subCategoryUrl) {
+        query = query.andWhere('subCategory.url = :subCategoryUrl', {
+          subCategoryUrl: subCategoryUrl,
+        });
+
+        countQuery = countQuery.andWhere('subCategory.url = :subCategoryUrl', {
+          subCategoryUrl: subCategoryUrl,
         });
       }
 

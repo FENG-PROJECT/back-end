@@ -54,16 +54,32 @@ export class CategoryService {
       });
       if (!category) return false;
 
+      const checkUrl = await this.subCategoryRepository
+        .createQueryBuilder('subCategory')
+        .leftJoinAndSelect('subCategory.category', 'category')
+        .where('category.name = :categoryName', {
+          categoryName: category.name,
+        })
+        .andWhere('subCategory.url = :url', { url: createSubCategoryDto.url })
+        .getOne();
+      if (checkUrl) return false;
+
       const subCategories = await this.subCategoryRepository.save(
-        new SubCategory(createSubCategoryDto.name, category),
+        new SubCategory(
+          createSubCategoryDto.name,
+          createSubCategoryDto.url,
+          category,
+        ),
       );
 
       return {
         id: subCategories.id,
         name: subCategories.name,
+        url: subCategories.url,
         category: category.name,
       };
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }

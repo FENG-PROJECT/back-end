@@ -73,7 +73,8 @@ export class CategoryController {
       throw new InternalServerErrorException();
     }
 
-    if (!result) throw new NotFoundException();
+    if (!result)
+      throw new BadRequestException('category not found or url exist');
 
     return result;
   }

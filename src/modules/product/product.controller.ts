@@ -88,7 +88,8 @@ export class ProductController {
 
   @Get()
   async getProducts(
-    @Query('subCategoryId') subCategoryId: string,
+    @Query('category') category: string,
+    @Query('subCategoryUrl') subCategoryUrl: string,
     @Query('search') search: string,
     @Query('limit') limit: string,
     @Query('offset') offset: string,
@@ -97,7 +98,8 @@ export class ProductController {
 
     try {
       result = await this.productService.getProducts(
-        +subCategoryId,
+        category,
+        subCategoryUrl,
         search,
         +limit || 10,
         +offset || 0,
