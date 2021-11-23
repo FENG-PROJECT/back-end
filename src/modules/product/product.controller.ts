@@ -39,7 +39,7 @@ export class ProductController {
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() uploads: Array<Express.Multer.File>,
   ) {
-    for (const file of uploads['files']) {
+    for (const file of uploads?.['files'] || []) {
       if (file && !(file?.mimetype in ValidUploadFileType))
         throw new BadRequestException();
     }
@@ -49,9 +49,12 @@ export class ProductController {
     try {
       result = await this.productService.createProduct(
         createProductDto,
-        uploads['files'].map((e) => e.filename),
+        uploads?.['files']?.map((e) => e.filename) || [],
       );
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
 
     if (!result) throw new NotFoundException();
 
@@ -77,9 +80,11 @@ export class ProductController {
       result = await this.productService.updateProduct(
         +productId,
         createProductDto,
-        uploads['files'].map((e) => e.filename),
+        uploads?.['files']?.map((e) => e.filename) || [],
       );
-    } catch (error) {}
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
 
     if (!result) throw new NotFoundException();
 
