@@ -107,7 +107,15 @@ export class ProductService {
   }
   async getProductDetail(productId: number) {
     try {
-      const product = await this.productRepository.findOne(productId);
+      const product = await this.productRepository
+        .createQueryBuilder('product')
+        .leftJoinAndSelect('product.subCategory', 'subCategory')
+        .leftJoinAndSelect('subCategory.category', 'category')
+        .leftJoinAndSelect('product.productStocks', 'productStocks')
+        .where('product.deleted = FALSE')
+        .andWhere('product.id = :productId', { productId: productId })
+        .getOne();
+
       if (!product) return false;
 
       return {
