@@ -69,7 +69,7 @@ export class ProductController {
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() uploads: Array<Express.Multer.File>,
   ) {
-    for (const file of uploads['files']) {
+    for (const file of uploads?.['files'] || []) {
       if (file && !(file?.mimetype in ValidUploadFileType))
         throw new BadRequestException();
     }
