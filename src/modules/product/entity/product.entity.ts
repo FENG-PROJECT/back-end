@@ -50,6 +50,7 @@ export class Product extends BaseEntity {
 
   @Column({
     type: 'json',
+    nullable: true,
   })
   color: string[];
 

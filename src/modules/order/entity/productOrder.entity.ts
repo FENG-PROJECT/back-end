@@ -40,6 +40,8 @@ export class ProductOrder extends BaseEntity {
   @Column()
   public size: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   public color: string;
 }
