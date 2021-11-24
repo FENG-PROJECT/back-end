@@ -22,6 +22,8 @@ export class ProductService {
     private productStockRepository: Repository<ProductStock>,
     @Inject('SUB_CATEGORY_REPOSITORY')
     private subCategoryRepository: Repository<SubCategory>,
+    @Inject('CATEGORY_REPOSITORY')
+    private categoryRepository: Repository<Category>,
   ) {}
 
   async getProducts(
@@ -170,9 +172,17 @@ export class ProductService {
         productStocks,
         status,
       } = createProductdto;
-      const subCategory = await this.subCategoryRepository.findOne(
-        createProductdto.subCategoryId,
-      );
+      //check category and sub category
+      const subCategory = await this.subCategoryRepository
+        .createQueryBuilder('subCategory')
+        .leftJoin('subCategory.category', 'category')
+        .where('subCategory.url = :url', {
+          url: createProductdto.subCategoryUrl,
+        })
+        .andWhere('category.name = :category', {
+          category: createProductdto.category,
+        })
+        .getOne();
       if (!subCategory) return false;
 
       const product = new Product(
@@ -231,18 +241,26 @@ export class ProductService {
         status,
         productStocks,
       } = createProductdto;
-      const subCategory = await this.subCategoryRepository.findOne(
-        createProductdto.subCategoryId,
-      );
-
+      //check category and sub category
+      const subCategory = await this.subCategoryRepository
+        .createQueryBuilder('subCategory')
+        .leftJoin('subCategory.category', 'category')
+        .where('subCategory.url = :url', {
+          url: createProductdto.subCategoryUrl,
+        })
+        .andWhere('category.name = :category', {
+          category: createProductdto.category,
+        })
+        .getOne();
       if (!subCategory) return false;
+
       product.name = name;
       product.price = Number(price);
       product.arrival = arrival;
       product.status = status;
       product.color = JSON.parse(color);
       product.description = description;
-
+      product.subCategory = subCategory;
       const removeImages = product.images.filter(
         (x) => !(images || []).includes(x),
       );

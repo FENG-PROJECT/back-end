@@ -3,7 +3,10 @@ import { ProductStatus } from 'src/utils/constant';
 
 export class CreateProductDto {
   @IsString()
-  readonly subCategoryId: string;
+  readonly category: string;
+
+  @IsString()
+  readonly subCategoryUrl: string;
 
   @IsString()
   readonly name: string;
