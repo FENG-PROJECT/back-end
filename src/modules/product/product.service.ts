@@ -103,6 +103,7 @@ export class ProductService {
           subCategory: {
             id: p.subCategory?.id,
             name: p.subCategory?.name,
+            url: p.subCategory.url,
           },
           category: {
             id: p.subCategory.category?.id,
@@ -143,6 +144,7 @@ export class ProductService {
         subCategory: {
           id: product.subCategory.id,
           name: product.subCategory.name,
+          url: product.subCategory.url,
         },
         category: {
           id: product.subCategory.category.id,
