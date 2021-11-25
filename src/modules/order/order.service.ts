@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { OrderStatus } from 'src/utils/constant';
 import { In, Not, Repository } from 'typeorm';
 import { Product } from '../product/entity';
+import { ProductStock } from '../product/entity/productStock.entity';
 import { CreateOrderDto } from './dto';
 import { UpdateStatusOrderDto } from './dto/updateStatusOrder.dto';
 import { Order } from './entity';
@@ -18,6 +19,8 @@ export class OrderService {
     private productRepository: Repository<Product>,
     @Inject('PRODUCT_ORDER_REPOSITORY')
     private productOrderRepository: Repository<ProductOrder>,
+    @Inject('PRODUCT_STOCK_REPOSITORY')
+    private productStockRepository: Repository<ProductStock>,
   ) {}
 
   async createOrder(createOrderDto: CreateOrderDto) {
@@ -96,7 +99,7 @@ export class OrderService {
         totalPrice: o.totalPrice,
         createdAt: o.createdAt,
         products: o.productOrders.map((p) => ({
-          id: p.id,
+          id: p.product?.id,
           name: p.product?.name,
           amount: p.amount,
           size: p.size,
@@ -111,10 +114,26 @@ export class OrderService {
 
   async updateOrder(orderId: number, updateStatusOrder: UpdateStatusOrderDto) {
     try {
-      const order = await this.orderRepository.findOne(orderId);
-      if (!order) return false;
+      const order = await this.orderRepository
+        .createQueryBuilder('order')
+        .leftJoinAndSelect('order.productOrders', 'productOrders')
+        .leftJoinAndSelect('productOrders.product', 'product')
+        .leftJoinAndSelect('product.productStocks', 'productStocks')
+        .where('order.id = :orderId', { orderId: orderId })
+        .getOne();
+      if (!order || order.status === OrderStatus.SUCCESSFUL) return false;
 
       order.status = updateStatusOrder.status;
+      if (order.status === OrderStatus.SUCCESSFUL) {
+        for (const productOrder of order.productOrders) {
+          const product = productOrder.product.productStocks.find(
+            (e) => e.size == productOrder.size,
+          );
+          if (product) product.amount -= productOrder.amount;
+
+          await this.productStockRepository.save(product);
+        }
+      }
       await this.orderRepository.save(order);
 
       return {
