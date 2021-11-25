@@ -45,12 +45,12 @@ export class OrderService {
       );
       await this.orderRepository.save(order);
 
-      for (const _product of products) {
-        const product = productOrders.find((e) => e.productId === _product.id);
-        const { amount, size, color } = product;
+      for (const _product of productOrders) {
+        const product = products.find((e) => e.id === _product.productId);
+        const { amount, size, color } = _product;
         const productOrder = new ProductOrder(
           order,
-          _product,
+          product,
           amount,
           size,
           color,
