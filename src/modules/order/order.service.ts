@@ -35,8 +35,7 @@ export class OrderService {
               },
             })
           : [];
-      if (products.length < productOrders.length || products.length === 0)
-        return false;
+      if (products.length === 0) return false;
       const order = new Order(name, phone, address);
 
       order.totalPrice = productOrders.reduce(
