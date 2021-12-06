@@ -82,7 +82,7 @@ export class OrderService {
     }
   }
 
-  async getOrders(orderStatus: OrderStatus) {
+  async getOrders(orderStatus: OrderStatus, search: string) {
     try {
       let query = this.orderRepository
         .createQueryBuilder('order')
@@ -94,6 +94,14 @@ export class OrderService {
           orderStatus: orderStatus,
         });
       }
+      if (search) {
+        query = query.andWhere(
+          '(LOWER(order.name) LIKE LOWER(:search) OR LOWER(order.phone) LIKE LOWER(:search) OR LOWER(order.address) LIKE LOWER(:search))',
+          {
+            search: `%${search}%`,
+          },
+        );
+      }
       const orders = await query.orderBy('order.updatedAt', 'DESC').getMany();
       return orders.map((o) => ({
         id: o.id,
@@ -102,6 +110,7 @@ export class OrderService {
         address: o.address,
         status: o.status,
         totalPrice: o.totalPrice,
+        note: o.note,
         createdAt: o.createdAt,
         products: o.productOrders.map((p) => ({
           id: p.product?.id,

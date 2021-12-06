@@ -30,11 +30,14 @@ export class OrderController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getOrders(@Query('orderStatus') orderStatus: OrderStatus) {
+  async getOrders(
+    @Query('orderStatus') orderStatus: OrderStatus,
+    @Query('search') search: string,
+  ) {
     let result = null;
 
     try {
-      result = await this.orderService.getOrders(orderStatus);
+      result = await this.orderService.getOrders(orderStatus, search);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
