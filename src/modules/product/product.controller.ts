@@ -52,7 +52,6 @@ export class ProductController {
         uploads?.['files']?.map((e) => e.filename) || [],
       );
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException();
     }
 

@@ -14,7 +14,7 @@ export class Product extends BaseEntity {
     name: string,
     price: number,
     arrival: string,
-    color: string[],
+    color: unknown[],
     description: string,
     status: ProductStatus,
   ) {
@@ -52,7 +52,7 @@ export class Product extends BaseEntity {
     type: 'json',
     nullable: true,
   })
-  color: string[];
+  color: unknown[];
 
   @Column({
     type: 'text',

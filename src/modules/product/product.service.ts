@@ -174,6 +174,7 @@ export class ProductService {
         productStocks,
         status,
       } = createProductdto;
+      console.log(createProductdto);
       //check category and sub category
       const subCategory = await this.subCategoryRepository
         .createQueryBuilder('subCategory')
@@ -220,6 +221,8 @@ export class ProductService {
         },
       };
     } catch (error) {
+      console.log(error, 'error');
+      this.logger.error(error);
       throw error;
     }
   }
