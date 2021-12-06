@@ -54,7 +54,7 @@ export class OrderController {
       throw new InternalServerErrorException();
     }
 
-    if (!result) throw new NotFoundException();
+    if (!result) throw new BadRequestException();
 
     return result;
   }

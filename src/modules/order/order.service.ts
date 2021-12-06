@@ -35,14 +35,18 @@ export class OrderService {
               },
             })
           : [];
+      if (products.length < productOrders.length || products.length === 0)
+        return false;
       const order = new Order(name, phone, address);
 
       order.totalPrice = productOrders.reduce(
         (acc, curr) =>
           acc +
-          curr.amount * products.find((e) => e.id === curr.productId).price,
+            curr.amount *
+              products.find((e) => e.id === curr.productId)?.price || 0,
         0,
       );
+      order.note = createOrderDto.note;
       await this.orderRepository.save(order);
 
       for (const _product of productOrders) {
@@ -70,6 +74,7 @@ export class OrderService {
           amount: e.amount,
         })),
         totalPrice: newOrder.totalPrice,
+        note: newOrder.note,
       };
     } catch (error) {
       console.log(error);

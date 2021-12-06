@@ -14,4 +14,8 @@ export class CreateOrderDto {
   readonly productOrders: [
     { productId: number; amount: number; size: string; color: string },
   ];
+
+  @IsOptional()
+  @IsString()
+  readonly note: string;
 }

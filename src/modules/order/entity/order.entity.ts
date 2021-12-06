@@ -30,6 +30,12 @@ export class Order extends BaseEntity {
   @Column()
   public totalPrice: number;
 
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  public note: string;
+
   @Column()
   public status: string;
 }
