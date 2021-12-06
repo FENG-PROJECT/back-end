@@ -7,10 +7,12 @@ import { CategoryModule } from './modules/category/category.module';
 import { CollectionModule } from './modules/collection/collection.module';
 import { OrderModule } from './modules/order/order.module';
 import { EventModule } from './modules/event/event.module';
+import { ConfigModule as AppConfigModule } from './modules/config/config.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    AppConfigModule,
     HealthModule,
     AuthModule,
     ProductModule,

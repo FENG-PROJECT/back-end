@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Not, Repository } from 'typeorm';
 import { Category, SubCategory } from '../category/entity';
 import { CreateProductDto } from './dto';
@@ -174,7 +169,6 @@ export class ProductService {
         productStocks,
         status,
       } = createProductdto;
-      console.log(createProductdto);
       //check category and sub category
       const subCategory = await this.subCategoryRepository
         .createQueryBuilder('subCategory')
