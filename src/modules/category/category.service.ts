@@ -99,6 +99,7 @@ export class CategoryService {
       if (!subCategory || !category) return false;
 
       subCategory.name = createSubCategoryDto.name;
+      subCategory.url = createSubCategoryDto.url;
       subCategory.category = category;
       await this.subCategoryRepository.save(subCategory);
 
