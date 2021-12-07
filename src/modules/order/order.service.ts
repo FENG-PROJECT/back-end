@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { OrderStatus } from 'src/utils/constant';
 import { In, Not, Repository } from 'typeorm';
+import { MailService } from '../mail/mail.service';
 import { Product } from '../product/entity';
 import { ProductStock } from '../product/entity/productStock.entity';
 import { CreateOrderDto } from './dto';
@@ -13,6 +14,7 @@ export class OrderService {
   private readonly logger = new Logger(OrderService.name);
 
   constructor(
+    private readonly mailService: MailService,
     @Inject('ORDER_REPOSITORY')
     private orderRepository: Repository<Order>,
     @Inject('PRODUCT_REPOSITORY')
@@ -25,7 +27,7 @@ export class OrderService {
 
   async createOrder(createOrderDto: CreateOrderDto) {
     try {
-      const { name, phone, address, productOrders } = createOrderDto;
+      const { name, phone, address, email, productOrders } = createOrderDto;
 
       const products =
         productOrders.length > 0
@@ -36,7 +38,7 @@ export class OrderService {
             })
           : [];
       if (products.length === 0) return false;
-      const order = new Order(name, phone, address);
+      const order = new Order(name, phone, address, email);
 
       order.totalPrice = productOrders.reduce(
         (acc, curr) =>
@@ -67,6 +69,7 @@ export class OrderService {
         name: newOrder.name,
         phone: newOrder.phone,
         address: newOrder.address,
+        email: newOrder.email,
         products: newOrder.productOrders?.map((e) => ({
           product: e.product.name,
           price: e.product.price,
@@ -107,6 +110,7 @@ export class OrderService {
         name: o.name,
         phone: o.phone,
         address: o.address,
+        email: o.email,
         status: o.status,
         totalPrice: o.totalPrice,
         note: o.note,
@@ -134,10 +138,22 @@ export class OrderService {
         .leftJoinAndSelect('product.productStocks', 'productStocks')
         .where('order.id = :orderId', { orderId: orderId })
         .getOne();
-      if (!order || order.status === OrderStatus.SUCCESSFUL) return false;
+      if (
+        !order ||
+        order.status === OrderStatus.SUCCESSFUL ||
+        order.status === OrderStatus.REJECT
+      )
+        return false;
+
+      //cannot reject order processing
+      if (
+        order.status === OrderStatus.PROCESSING &&
+        updateStatusOrder.status === OrderStatus.REJECT
+      )
+        return false;
 
       order.status = updateStatusOrder.status;
-      if (order.status === OrderStatus.SUCCESSFUL) {
+      if (order.status === OrderStatus.PROCESSING) {
         for (const productOrder of order.productOrders) {
           const product = productOrder.product.productStocks.find(
             (e) => e.size == productOrder.size,
@@ -148,7 +164,10 @@ export class OrderService {
         }
       }
       await this.orderRepository.save(order);
-
+      this.mailService.sendMail(order.email, 'Billing', 'confirmation', {
+        email: order.email,
+        url: `${process.env.URL}/api/auth/confirmMail/${order.email}`,
+      });
       return {
         message: 'success',
         statusOrder: updateStatusOrder.status,

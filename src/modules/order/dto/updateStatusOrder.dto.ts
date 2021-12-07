@@ -1,5 +1,10 @@
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { OrderStatus } from 'src/utils/constant';
+
+enum OrderStatus {
+  PROCESSING = 'PROCESSING',
+  SUCCESSFUL = 'SUCCESSFUL',
+  REJECT = 'REJECT',
+}
 
 export class UpdateStatusOrderDto {
   @IsNotEmpty()

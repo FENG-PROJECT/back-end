@@ -13,10 +13,10 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
         secure: true, //process.env.SMTP_SECURE === 'true',
         // ignoreTLS: process.env.SMTP_SECURE !== 'false',
         auth: {
-          user: process.env.SMTP_AUTH_USER || '1610878@hcmut.edu.vn',
-          pass: process.env.SMTP_AUTH_PASS || 'khoahocmaytinh',
+          user: process.env.SMTP_AUTH_USER || 'feng.customerservice@gmail.com',
+          pass: process.env.SMTP_AUTH_PASS || 'A123456789@',
         },
-        from: process.env.SMTP_AUTH_USER || '1610878@hcmut.edu.vn',
+        from: process.env.SMTP_AUTH_USER || 'feng.customerservice@gmail.com',
       },
       template: {
         dir: resolve(__dirname, './templates'),

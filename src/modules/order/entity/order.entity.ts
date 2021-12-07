@@ -7,11 +7,12 @@ import { ProductOrder } from './productOrder.entity';
 
 @Entity('orders')
 export class Order extends BaseEntity {
-  constructor(name: string, phone: string, address: string) {
+  constructor(name: string, phone: string, address: string, email: string) {
     super();
     this.name = name;
     this.phone = phone;
     this.address = address;
+    this.email = email;
     this.status = OrderStatus.PENDING;
   }
 
@@ -23,6 +24,9 @@ export class Order extends BaseEntity {
 
   @Column()
   public address: string;
+
+  @Column()
+  public email: string;
 
   @OneToMany(() => ProductOrder, (productOrder) => productOrder.order)
   public productOrders: ProductOrder[];

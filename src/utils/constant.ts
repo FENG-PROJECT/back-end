@@ -10,6 +10,7 @@ enum OrderStatus {
   PENDING = 'PENDING',
   PROCESSING = 'PROCESSING',
   SUCCESSFUL = 'SUCCESSFUL',
+  REJECT = 'REJECT',
 }
 
 enum ValidUploadFileType {

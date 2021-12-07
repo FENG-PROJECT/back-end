@@ -10,6 +10,9 @@ export class CreateOrderDto {
   @IsString()
   readonly address: string;
 
+  @IsString()
+  readonly email: string;
+
   @IsArray()
   readonly productOrders: [
     { productId: number; amount: number; size: string; color: string },
