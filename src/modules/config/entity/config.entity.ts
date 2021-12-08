@@ -8,18 +8,21 @@ export class Config extends BaseEntity {
   }
 
   @Column({
+    type: 'text',
     name: 'customer_care',
     nullable: true,
   })
   public customerCare: string;
 
   @Column({
+    type: 'text',
     name: 'about_us',
     nullable: true,
   })
   public aboutUs: string;
 
   @Column({
+    type: 'text',
     nullable: true,
   })
   public contact: string;
