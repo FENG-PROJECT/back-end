@@ -46,7 +46,6 @@ export class ConfigController {
     return result;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async getConfig() {
     let result = null;
