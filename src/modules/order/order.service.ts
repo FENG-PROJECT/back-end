@@ -164,9 +164,17 @@ export class OrderService {
         }
       }
       await this.orderRepository.save(order);
-      this.mailService.sendMail(order.email, 'Billing', 'confirmation', {
-        email: order.email,
-        url: `${process.env.URL}/api/auth/confirmMail/${order.email}`,
+      this.mailService.sendMail(order.email, 'Billing', 'billing', {
+        name: order.name,
+        phone: order.phone,
+        address: order.address,
+        totalPrice: order.totalPrice,
+        products: order.productOrders.map((p) => ({
+          name: p.product.name,
+          price: p.product.price,
+          quantity: p.amount,
+          amount: p.product.price * p.amount,
+        })),
       });
       return {
         message: 'success',

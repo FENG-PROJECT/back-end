@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feng Invoice</title>
+    <link
+        href="https://fonts.googleapis.com/css?display=swap&family=Roboto:400,400i,700,700i&subset=cyrillic,greek,latin-ext,vietnamese"
+        rel="stylesheet" type="text/css">
+    <style type="text/css">
+        @import url(https://fonts.googleapis.com/css?display=swap&family=Roboto:400,400i,700,700i&subset=cyrillic,greek,latin-ext,vietnamese);
+    </style>
+</head>
+
+<style>
+    * {
+        font-family: Roboto;
+    }
+
+    hr {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 1px solid #000;
+        margin: 1em 0;
+        padding: 0;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: none;
+    }
+</style>
+
+<body style="background-color: #F6F6F6">
+    <div style="width:100%;">
+        <div style="width: 600px;background-color:#fff;border-radius: 10px;margin:0 auto;padding: 15px">
+            <div style="width:100%;text-align:center">
+                <h1 style="font-size:45pt;letter-spacing: -0.5pt;">FENG SYSTEM</h1>
+            </div>
+            <div style="display: flex;align-items:center;justify-content: start;font-size: 15pt"><b>INVOICE</b></div>
+            <hr>
+            <div>
+                <div style="line-height:90%">
+                    <p>Name: {{name}}</p>
+                    <p>Phone: {{phone}}</p>
+                    <p>Address: {{address}}</p>
+                    <p>Sale asisstant: </p>
+                </div>
+            </div>
+            <hr>
+            <div style="width: 100%; display: flex;align-items:center;justify-content:space-between;color: gray">
+                <div style="width: 40%">Product description</div>
+                <div style="width: 20%">Price</div>
+                <div style="width: 20%">Quantily</div>
+                <div style="width: 20%">Amount</div>
+            </div>
+            <br />
+            <!-- loop item cho nay -->
+            {{#each products}}
+            <div style="width: 100%; display: flex;align-items:center;justify-content:space-between">
+                <div style="width: 40%">{{this.name}}</div>
+                <div style="width: 20%">{{this.price}}</div>
+                <div style="width: 20%">{{this.quantity}}</div>
+                <div style="width: 20%">{{this.amount}}</div>
+            </div>
+            {{/each}}
+            <!-- loop item cho nay -->
+            <br />
+            <div style="width: 100%; display: flex;align-items:center;justify-content:flex-end">
+                <div style="width:50%">
+                    <hr />
+                    <div
+                        style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
+                        <div style="width: 40%">Total:</div>
+                        <div style="width: 60%">${{totalPrice}}</div>
+                    </div>
+                    <div
+                        style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
+                        <div style="width: 40%">Discount:</div>
+                        <div style="width: 60%">$0</div>
+                    </div>
+                    <div
+                        style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
+                        <div style="width: 40%">For payment:</div>
+                        <div style="width: 60%">$0</div>
+                    </div>
+                    <div
+                        style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
+                        <div style="width: 40%">Paid:</div>
+                        <div style="width: 60%">${{totalPrice}}</div>
+                    </div>
+                    <div
+                        style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
+                        <div style="width: 40%">Amount due:</div>
+                        <div style="width: 60%">$0</div>
+                    </div>
+                    <div
+                        style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
+                        <div style="width: 40%">Paid by:</div>
+                        <div style="width: 60%">$0</div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div style="display: flex;align-items:center;justify-content: start;font-size: 15pt"><b>HƯỚNG DẪN THANH TOÁN
+                    / PAYMENT</b></div>
+            <br />
+            <div style="line-height:125%">
+                <div style="color: gray;font-size:10pt">*Quý khách vui lòng thanh toán và chuyển khoản theo STK: <span
+                        style="color: black"><b>VP BANK PHUNG THI AI NGUYEN 27322255 | MOMO: 0393876948 PHUNG THI AI
+                            NGUYEN | PayPal: nguyentuadigan@gmail.com</b></span></div>
+                <div style="color: gray;font-size:10pt">*Nội dung chuyển khoản: họ và tên chuyển tiền (vui lòng không
+                    ghi thêm thông tin nào khác)</div>
+                <div style="color: gray;font-size:10pt">*Quý khách vui lòng giữ lại hóa đơn đã chuyển khoản để được xác
+                    nhận đơn hàng sớm nhất có thể</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

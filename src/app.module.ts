@@ -8,6 +8,7 @@ import { CollectionModule } from './modules/collection/collection.module';
 import { OrderModule } from './modules/order/order.module';
 import { EventModule } from './modules/event/event.module';
 import { ConfigModule as AppConfigModule } from './modules/config/config.module';
+import { SubcribeModule } from './modules/subcribe/subcribe.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ConfigModule as AppConfigModule } from './modules/config/config.module'
     OrderModule,
     CollectionModule,
     EventModule,
+    SubcribeModule,
   ],
 })
 export class AppModule {}
