@@ -47,6 +47,21 @@ export class OrderController {
     return result;
   }
 
+  @Get('/email/:email')
+  async getOrderByEmail(@Param('email') email: string) {
+    let result = null;
+
+    try {
+      result = await this.orderService.getOrderByEmail(email);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
+
+    if (!result) throw new BadRequestException();
+
+    return result;
+  }
+
   @Post()
   async createOrder(@Body() createOrder: CreateOrderDto) {
     let result = null;

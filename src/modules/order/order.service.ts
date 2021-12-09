@@ -62,8 +62,24 @@ export class OrderService {
         );
         await this.productOrderRepository.save(productOrder);
       }
-      const newOrder = await this.orderRepository.findOne(order.id);
+      const newOrder = await this.orderRepository
+        .createQueryBuilder('order')
+        .leftJoinAndSelect('order.productOrders', 'productOrders')
+        .leftJoinAndSelect('productOrders.product', 'product')
+        .getOne();
 
+      this.mailService.sendMail(order.email, 'Billing', 'billing', {
+        name: newOrder.name,
+        phone: newOrder.phone,
+        address: newOrder.address,
+        totalPrice: newOrder.totalPrice,
+        products: newOrder.productOrders.map((p) => ({
+          name: p.product.name,
+          price: p.product.price,
+          quantity: p.amount,
+          amount: p.product.price * p.amount,
+        })),
+      });
       return {
         id: newOrder.id,
         name: newOrder.name,
@@ -145,15 +161,8 @@ export class OrderService {
       )
         return false;
 
-      //cannot reject order processing
-      if (
-        order.status === OrderStatus.PROCESSING &&
-        updateStatusOrder.status === OrderStatus.REJECT
-      )
-        return false;
-
       order.status = updateStatusOrder.status;
-      if (order.status === OrderStatus.PROCESSING) {
+      if (order.status === OrderStatus.SUCCESSFUL) {
         for (const productOrder of order.productOrders) {
           const product = productOrder.product.productStocks.find(
             (e) => e.size == productOrder.size,
@@ -164,24 +173,45 @@ export class OrderService {
         }
       }
       await this.orderRepository.save(order);
-      this.mailService.sendMail(order.email, 'Billing', 'billing', {
-        name: order.name,
-        phone: order.phone,
-        address: order.address,
-        totalPrice: order.totalPrice,
-        products: order.productOrders.map((p) => ({
-          name: p.product.name,
-          price: p.product.price,
-          quantity: p.amount,
-          amount: p.product.price * p.amount,
-        })),
-      });
       return {
         message: 'success',
         statusOrder: updateStatusOrder.status,
       };
     } catch (error) {
       this.logger.error(error);
+      throw error;
+    }
+  }
+
+  async getOrderByEmail(email: string) {
+    try {
+      let query = this.orderRepository
+        .createQueryBuilder('order')
+        .leftJoinAndSelect('order.productOrders', 'productOrders')
+        .leftJoinAndSelect('productOrders.product', 'product')
+        .where('order.email = :email', { email: email });
+
+      const orders = await query.orderBy('order.updatedAt', 'DESC').getMany();
+      return orders.map((o) => ({
+        id: o.id,
+        name: o.name,
+        phone: o.phone,
+        address: o.address,
+        email: o.email,
+        status: o.status,
+        totalPrice: o.totalPrice,
+        note: o.note,
+        createdAt: o.createdAt,
+        products: o.productOrders.map((p) => ({
+          id: p.product?.id,
+          name: p.product?.name,
+          amount: p.amount,
+          size: p.size,
+          color: p.color,
+        })),
+      }));
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   }
