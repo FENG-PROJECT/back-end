@@ -15,6 +15,17 @@ export class CreateProductDto {
   readonly price: string;
 
   @IsString()
+  readonly priceUS: string;
+
+  @IsOptional()
+  @IsString()
+  readonly priceOld: string;
+
+  @IsOptional()
+  @IsString()
+  readonly priceUSOld: string;
+
+  @IsString()
   readonly arrival: string;
 
   @IsString()

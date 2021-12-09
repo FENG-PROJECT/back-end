@@ -17,8 +17,6 @@ export class ProductService {
     private productStockRepository: Repository<ProductStock>,
     @Inject('SUB_CATEGORY_REPOSITORY')
     private subCategoryRepository: Repository<SubCategory>,
-    @Inject('CATEGORY_REPOSITORY')
-    private categoryRepository: Repository<Category>,
   ) {}
 
   async getProducts(
@@ -90,6 +88,9 @@ export class ProductService {
           id: p.id,
           name: p.name,
           price: p.price,
+          priceOld: p.priceOld,
+          priceUS: p.priceUS,
+          priceUSOld: p.priceUSOld,
           arrival: p.arrival,
           status: p.status,
           color: p.color,
@@ -131,6 +132,9 @@ export class ProductService {
         id: product.id,
         name: product.name,
         price: product.price,
+        priceOld: product.priceOld,
+        priceUS: product.priceUS,
+        priceUSOld: product.priceUSOld,
         arrival: product.arrival,
         status: product.status,
         color: product.color,
@@ -163,6 +167,9 @@ export class ProductService {
       const {
         name,
         price,
+        priceUS,
+        priceOld,
+        priceUSOld,
         arrival,
         color,
         description,
@@ -186,6 +193,9 @@ export class ProductService {
         subCategory,
         name,
         Number(price),
+        Number(priceUS),
+        Number(priceOld),
+        Number(priceUSOld),
         arrival,
         JSON.parse(color),
         description,
@@ -207,6 +217,9 @@ export class ProductService {
           id: product.id,
           name: product.name,
           price: product.price,
+          priceOld: product.priceOld,
+          priceUS: product.priceUS,
+          priceUSOld: product.priceUSOld,
           arrival: product.arrival,
           status: product.status,
           color: product.color,
@@ -233,6 +246,9 @@ export class ProductService {
       const {
         name,
         price,
+        priceUS,
+        priceOld,
+        priceUSOld,
         arrival,
         color,
         description,
@@ -255,6 +271,9 @@ export class ProductService {
 
       product.name = name;
       product.price = Number(price);
+      product.priceOld = Number(priceOld);
+      product.priceUS = Number(priceUS);
+      product.priceUSOld = Number(priceUSOld);
       product.arrival = arrival;
       product.status = status;
       product.color = JSON.parse(color);

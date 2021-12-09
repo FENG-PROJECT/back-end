@@ -13,6 +13,9 @@ export class Product extends BaseEntity {
     subCategory: SubCategory,
     name: string,
     price: number,
+    priceUS: number,
+    priceOld: number,
+    priceUSOld: number,
     arrival: string,
     color: unknown[],
     description: string,
@@ -22,6 +25,9 @@ export class Product extends BaseEntity {
     this.subCategory = subCategory;
     this.name = name;
     this.price = price;
+    this.priceUS = priceUS;
+    this.priceOld = priceOld;
+    this.priceUSOld = priceUSOld;
     this.arrival = arrival;
     this.color = color;
     this.description = description;
@@ -42,6 +48,21 @@ export class Product extends BaseEntity {
     nullable: true,
   })
   public price: number;
+
+  @Column({
+    nullable: true,
+  })
+  public priceUS: number;
+
+  @Column({
+    nullable: true,
+  })
+  public priceOld: number;
+
+  @Column({
+    nullable: true,
+  })
+  public priceUSOld: number;
 
   @Column({
     nullable: true,
