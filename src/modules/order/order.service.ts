@@ -204,6 +204,7 @@ export class OrderService {
         createdAt: o.createdAt,
         products: o.productOrders.map((p) => ({
           id: p.product?.id,
+          images: p.product.images,
           name: p.product?.name,
           amount: p.amount,
           size: p.size,
