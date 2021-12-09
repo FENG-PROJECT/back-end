@@ -39,18 +39,18 @@
 
 <body style="background-color: #F6F6F6">
     <div style="width:100%;">
-        <div style="width: 600px;background-color:#fff;border-radius: 10px;margin:0 auto;padding: 15px">
+        <div style="width: 80%;background-color:#fff;border-radius: 10px;margin:0 auto;padding: 15px">
             <div style="width:100%;text-align:center">
                 <h1 style="font-size:45pt;letter-spacing: -0.5pt;">FENG SYSTEM</h1>
             </div>
-            <div style="display: flex;align-items:center;justify-content: start;font-size: 15pt"><b>INVOICE</b></div>
+            <div style="display: flex;align-items:center;justify-content: start;font-size: 20pt"><b>PAYMENT / PHIẾU THU
+                    THANH TOÁN</b></div>
             <hr>
             <div>
                 <div style="line-height:90%">
-                    <p>Name: {{name}}</p>
-                    <p>Phone: {{phone}}</p>
-                    <p>Address: {{address}}</p>
-                    <p>Sale asisstant: </p>
+                    <p>Name: {{name}} </p>
+                    <p>Phone: {{phone}} </p>
+                    <p>Address: {{address}} </p>
                 </div>
             </div>
             <hr>
@@ -77,33 +77,18 @@
                     <hr />
                     <div
                         style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
-                        <div style="width: 40%">Total:</div>
-                        <div style="width: 60%">${{totalPrice}}</div>
+                        <div style="width: 40%">Subtotal:</div>
+                        <div style="width: 60%">{{totalPrice}} VND</div>
                     </div>
                     <div
                         style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
                         <div style="width: 40%">Discount:</div>
-                        <div style="width: 60%">$0</div>
+                        <div style="width: 60%">0 VND</div>
                     </div>
                     <div
                         style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
-                        <div style="width: 40%">For payment:</div>
-                        <div style="width: 60%">$0</div>
-                    </div>
-                    <div
-                        style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
-                        <div style="width: 40%">Paid:</div>
-                        <div style="width: 60%">${{totalPrice}}</div>
-                    </div>
-                    <div
-                        style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
-                        <div style="width: 40%">Amount due:</div>
-                        <div style="width: 60%">$0</div>
-                    </div>
-                    <div
-                        style="margin-bottom: 5px;width: 100%; display: flex;align-items:center;justify-content:flex-start">
-                        <div style="width: 40%">Paid by:</div>
-                        <div style="width: 60%">$0</div>
+                        <div style="width: 40%">Total:</div>
+                        <div style="width: 60%">{{totalPrice}} VND</div>
                     </div>
                 </div>
             </div>
