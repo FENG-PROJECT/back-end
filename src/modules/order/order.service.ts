@@ -66,6 +66,7 @@ export class OrderService {
         .createQueryBuilder('order')
         .leftJoinAndSelect('order.productOrders', 'productOrders')
         .leftJoinAndSelect('productOrders.product', 'product')
+        .where('order.id = :orderId', { orderId: order.id })
         .getOne();
 
       this.mailService.sendMail(order.email, 'Billing', 'billing', {
