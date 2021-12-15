@@ -1,4 +1,5 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
+import { PaymentType } from 'src/utils/constant';
 
 export class CreateOrderDto {
   @IsString()
@@ -17,6 +18,9 @@ export class CreateOrderDto {
   readonly productOrders: [
     { productId: number; amount: number; size: string; color: string },
   ];
+
+  @IsEnum(PaymentType)
+  readonly paymentType: PaymentType;
 
   @IsOptional()
   @IsString()

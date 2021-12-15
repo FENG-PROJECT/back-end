@@ -13,6 +13,11 @@ enum OrderStatus {
   REJECT = 'REJECT',
 }
 
+enum PaymentType {
+  COD = 'COD',
+  BANKING = 'BANKING',
+}
+
 enum ValidUploadFileType {
   'image/jpg',
   'image/jpeg',
@@ -20,4 +25,10 @@ enum ValidUploadFileType {
   'application/json',
 }
 
-export { ZERO_ADDRESS, ValidUploadFileType, ProductStatus, OrderStatus };
+export {
+  ZERO_ADDRESS,
+  ValidUploadFileType,
+  ProductStatus,
+  OrderStatus,
+  PaymentType,
+};

@@ -1,18 +1,24 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 
 import { BaseEntity } from 'src/modules/database/entity';
-import { Product } from 'src/modules/product/entity';
-import { OrderStatus } from 'src/utils/constant';
+import { OrderStatus, PaymentType } from 'src/utils/constant';
 import { ProductOrder } from './productOrder.entity';
 
 @Entity('orders')
 export class Order extends BaseEntity {
-  constructor(name: string, phone: string, address: string, email: string) {
+  constructor(
+    name: string,
+    phone: string,
+    address: string,
+    email: string,
+    paymentType: PaymentType,
+  ) {
     super();
     this.name = name;
     this.phone = phone;
     this.address = address;
     this.email = email;
+    this.paymentType = paymentType;
     this.status = OrderStatus.PENDING;
   }
 
@@ -33,6 +39,9 @@ export class Order extends BaseEntity {
 
   @Column()
   public totalPrice: number;
+
+  @Column()
+  public paymentType: PaymentType;
 
   @Column({
     type: 'text',

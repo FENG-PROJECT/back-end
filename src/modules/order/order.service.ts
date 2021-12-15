@@ -27,7 +27,8 @@ export class OrderService {
 
   async createOrder(createOrderDto: CreateOrderDto) {
     try {
-      const { name, phone, address, email, productOrders } = createOrderDto;
+      const { name, phone, address, email, paymentType, productOrders } =
+        createOrderDto;
 
       const products =
         productOrders.length > 0
@@ -38,7 +39,7 @@ export class OrderService {
             })
           : [];
       if (products.length === 0) return false;
-      const order = new Order(name, phone, address, email);
+      const order = new Order(name, phone, address, email, paymentType);
 
       order.totalPrice = productOrders.reduce(
         (acc, curr) =>
@@ -93,6 +94,7 @@ export class OrderService {
           amount: e.amount,
         })),
         totalPrice: newOrder.totalPrice,
+        paymentType: newOrder.paymentType,
         note: newOrder.note,
       };
     } catch (error) {
@@ -130,6 +132,7 @@ export class OrderService {
         email: o.email,
         status: o.status,
         totalPrice: o.totalPrice,
+        paymentType: o.paymentType,
         note: o.note,
         createdAt: o.createdAt,
         products: o.productOrders.map((p) => ({
@@ -201,6 +204,7 @@ export class OrderService {
         email: o.email,
         status: o.status,
         totalPrice: o.totalPrice,
+        paymentType: o.paymentType,
         note: o.note,
         createdAt: o.createdAt,
         products: o.productOrders.map((p) => ({
