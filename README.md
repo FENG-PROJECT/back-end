@@ -1,4 +1,4 @@
-# AKC
+# FENG SYSTEM BACKEND
 
 ## Prerequisites
 
@@ -9,7 +9,6 @@ The following prerequisites are required to be installed on your system:
 | nodejs          | docker         |
 | yarn (optional) | docker-compose |
 
-## Smart contract
 
 
 ## Execution
